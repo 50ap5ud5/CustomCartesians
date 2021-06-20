@@ -1,0 +1,156 @@
+plugins {
+    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'maven-publish'
+}
+
+loom {
+    accessWidener = file("src/main/resources/${mod_id}.accesswidener")
+    refmapName = "${mod_id}.refmap.json"
+}
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
+
+archivesBaseName = project.jar_name
+version = project.minecraft_version + "-" + project.mod_version
+group = project.maven_group
+
+repositories {
+    //Add Shedaniel's Cloth Config and Mod Menu mavens by default
+    maven { url "https://maven.shedaniel.me/" }
+    maven {
+        url "https://maven.terraformersmc.com/releases/"
+        content {
+            includeGroup "com.terraformersmc"
+        }
+    }
+}
+
+dependencies {
+
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+    //mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    mappings minecraft.officialMojangMappings()
+
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    //Compile against Cloth Config by default
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modCompileOnly("com.terraformersmc:modmenu:${mod_menu_version}") {
+        transitive(false)
+    }
+    modRuntime("com.terraformersmc:modmenu:${mod_menu_version}") {
+        transitive(false)
+    }
+
+    //Package Cloth Config inside the final built jar. This can increase the jar size by quite a bit so disable it if this not intended
+    include "me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}"
+}
+
+/* IntelliJ Project Import
+ * The Mixin annotation process does not have an obfuscation source when running through the IntelliJ compiler,
+ * Thus we have to prevent it from being activated as part of importing this Gradle project into IntelliJ.
+ */
+if (System.getProperty("idea.sync.active") == "true") {
+    afterEvaluate {
+        tasks.withType(JavaCompile).all {
+            it.options.annotationProcessorPath = files()
+        }
+    }
+}
+
+def resource_targets = ["fabric.mod.json", "pack.mcmeta"]
+task replaceResources(type: Copy) {
+    dependsOn(jar)
+    outputs.upToDateWhen { false }
+    def spec = copySpec {
+        from(sourceSets.main.resources) {
+            include resource_targets
+            expand "project": project, "mod_id": mod_id, "mod_name": mod_name, "mod_version": mod_version,
+                   "main_mod_class": main_mod_class,
+                   "main_mod_client_class": main_mod_client_class,
+                   "mod_authors": mod_authors, "mod_description": mod_description,
+                   "homepage":homepage, "sources":sources, "icon_file":icon_file,
+                   "license": license,
+                   "java_version_range":java_version_range,
+                   "fabric_version_range": fabric_version_range, "minecraft_version_range": minecraft_version_range,
+                   "fabric_loader_version_range": fabric_loader_version_range
+        }
+    }
+    with spec
+    into "$buildDir/resources/main/"
+
+    // If IntelliJ's output dir exists, copy it there as well
+    if (new File("$rootDir/out/production/${project.name}.main/").exists()) {
+        copy {
+            with spec
+            into "$rootDir/out/production/${project.name}.main/"
+        }
+    }
+    // If Eclipse's output dir exists, copy it there as well
+    if (new File("$rootDir/bin/main/").exists()) {
+        copy {
+            with spec
+            into "$rootDir/bin/main/"
+        }
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    // Exclude the resource targets as we manually handle those and don't want them to invalidate our cache
+    exclude resource_targets
+    finalizedBy replaceResources
+}
+
+tasks.withType(JavaCompile).configureEach {
+    // ensure that the encoding is set to UTF-8, no matter what the system default is
+    // this fixes some edge cases with special characters not displaying correctly
+    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+    // If Javadoc is generated, this must be specified in that task too.
+    it.options.encoding = "UTF-8"
+
+    // Minecraft 1.17 (21w19a) upwards uses Java 16.
+    it.options.release = 16
+}
+
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.jar_name}"}
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // add all the jars that should be included when publishing to maven
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
+}

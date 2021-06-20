@@ -1,0 +1,17 @@
+{
+  "key.categories.customcartesians":"Custom Cartesians",
+  "key.customcartesians.cycle_overlay_position":"Cycle Overlay Position",
+  "key.customcartesians.toggle_setting_base":"Mod Settings Base Key",
+  "key.customcartesians.toggle_overlay_screen":"Toggle Coordinate Overlay",
+  "key.customcartesians.toggle_x":"Toggle X Coordinate Display",
+  "key.customcartesians.toggle_y":"Toggle Y Coordinate Display",
+  "key.customcartesians.toggle_z":"Toggle Z Coordinate Display",
+  "message.customcartesians.toggle_overlay_screen":"Set Overlay Display to: ",
+  "message.customcartesians.toggle_coord_display":"Set %s Coordinate Display to: ",
+  "message.customcartesians.cycle_overlay_pos":"Set Overlay Position to: ",
+  "text.autoconfig.customcartesians.option.client.toggleOverlay": "Show Overlay Screen",
+  "text.autoconfig.customcartesians.option.client.toggleXCoord": "Toggle X Coordinate Display",
+  "text.autoconfig.customcartesians.option.client.toggleYCoord": "Toggle Y Coordinate Display",
+  "text.autoconfig.customcartesians.option.client.toggleZCoord": "Toggle Z Coordinate Display",
+  "text.autoconfig.customcartesians.title": "Custom Cartesians"
+}
