@@ -1,5 +1,7 @@
 package me.soapsuds.customcartesians.client;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.platform.InputConstants;
 
 import me.soapsuds.customcartesians.util.ModConstants;
@@ -16,12 +18,12 @@ public class ModKeyMappings {
 //    public static KeyMapping CYCLE_OVERLAY_POS;
     
     public static void registerKeyMappings() {
-    	TOGGLE_SETTING_BASE = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_SETTING_BASE, InputConstants.KEY_LALT, ModConstants.Translations.KEYMAPPING_CATEGORY));
-    	TOGGLE_OVERLAY = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_OVERLAY, InputConstants.KEY_LBRACKET, ModConstants.Translations.KEYMAPPING_CATEGORY));
-    	TOGGLE_X = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_X, InputConstants.KEY_H, ModConstants.Translations.KEYMAPPING_CATEGORY));
-    	TOGGLE_Y = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_Y, InputConstants.KEY_J, ModConstants.Translations.KEYMAPPING_CATEGORY));
-    	TOGGLE_Z = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_Z, InputConstants.KEY_K, ModConstants.Translations.KEYMAPPING_CATEGORY));
-//    	CYCLE_OVERLAY_POS = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.CYCLE_OVERLAY_POS, InputConstants.KEY_EQUALS, ModConstants.Translations.KEYMAPPING_CATEGORY));
+        TOGGLE_SETTING_BASE = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_SETTING_BASE, GLFW.GLFW_KEY_LEFT_ALT, ModConstants.Translations.KEYMAPPING_CATEGORY));
+        TOGGLE_OVERLAY = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_OVERLAY, GLFW.GLFW_KEY_LEFT_BRACKET, ModConstants.Translations.KEYMAPPING_CATEGORY));
+        TOGGLE_X = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_X, GLFW.GLFW_KEY_H, ModConstants.Translations.KEYMAPPING_CATEGORY));
+        TOGGLE_Y = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_Y, GLFW.GLFW_KEY_J, ModConstants.Translations.KEYMAPPING_CATEGORY));
+        TOGGLE_Z = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.KEY_TOGGLE_Z, GLFW.GLFW_KEY_K, ModConstants.Translations.KEYMAPPING_CATEGORY));
+//      CYCLE_OVERLAY_POS = KeyBindingHelper.registerKeyBinding(new KeyMapping(ModConstants.Translations.CYCLE_OVERLAY_POS, InputConstants.KEY_EQUALS, ModConstants.Translations.KEYMAPPING_CATEGORY));
     }
 
 }
